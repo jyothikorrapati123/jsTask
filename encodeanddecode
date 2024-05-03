@@ -1,0 +1,53 @@
+class URLShortener {
+    constructor() {
+        
+        this.urlMap = new Map();
+       
+        this.reverseMap = new Map();
+        
+        this.counter = 0;
+        
+        this.baseUrl = "http://short.ly/";
+    }
+
+    
+    encodeURL(longURL) {
+       
+        if (this.reverseMap.has(longURL)) {
+            return this.baseUrl + this.reverseMap.get(longURL);
+        }
+
+       
+        let shortCode = this.counter.toString(36); 
+        this.counter++;
+
+       
+        this.urlMap.set(shortCode, longURL);
+        this.reverseMap.set(longURL, shortCode);
+
+        
+        return this.baseUrl + shortCode;
+    }
+
+   
+    decodeURL(shortURL) {
+        
+        let shortCode = shortURL.replace(this.baseUrl, '');
+
+       
+        if (this.urlMap.has(shortCode)) {
+            return this.urlMap.get(shortCode);
+        } else {
+            throw new Error("Short URL not found.");
+        }
+    }
+}
+
+
+const shortener = new URLShortener();
+const longURL = "https://example.com/some/very/long/url";
+const shortURL = shortener.encodeURL(longURL);
+console.log("Shortened URL:", shortURL);
+
+const decodedURL = shortener.decodeURL(shortURL);
+console.log("Original URL:", decodedURL);
